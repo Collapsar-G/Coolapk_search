@@ -3,14 +3,20 @@ from bs4 import BeautifulSoup
 import pymysql
 import re
 
-# connnect MySQL
+# connect MySQL
 db = pymysql.connect("localhost", "root", "8520", "coolapk")
 # 使用 cursor() 方法创建一个游标对象 cursor
 cursor = db.cursor()
-
-# sql = """Create table urllist(
-#         url char(100) not null)"""
+# sql = "drop table urllist"
 # cursor.execute(sql)
+try:
+    sql = """Create table urllist(
+        url varchar(200) not null,\
+        primary key (url)
+        )"""
+    cursor.execute(sql)
+except:
+    db.rollback()
 
 for i in range(1, 290):
     # specify the url
@@ -26,7 +32,7 @@ for i in range(1, 290):
     for link in name_box:
         if (re.findall('\/apk\/com\..*', link.get('href'))):
             href = link.get('href')
-            # print(type(href))
+            # print(href)
             try:
                 # 执行sql语句
 
@@ -39,7 +45,7 @@ for i in range(1, 290):
                 db.rollback()
     print("page %d end", i)
 # 关闭数据库连接
-sql =  "delete FROM urllist WHERE url LIKE '%%{}%%'".format('?')
+sql = "delete FROM urllist WHERE url LIKE '%%{}%%'".format('?')
 print(sql)
 cursor.execute(sql)
 db.commit()
