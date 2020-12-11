@@ -26,7 +26,7 @@ for words in hit_stop:
 for words in scu_stop:
     if words not in stopwords:
         stopwords.append(words)
-
+# print(stopwords)
 f = open(r'./stopwords.txt', 'a')
 
 f.write('\n'.join(stopwords))
