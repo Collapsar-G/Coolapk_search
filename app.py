@@ -32,7 +32,7 @@ def tojson(result):
         'id': result[0][0],
         'imgurl': result[0][1],
         'downloadurl': result[0][2],
-        'skipurl': "https:/www.coolapk.com/apk/" + result[0][3],
+        'skipurl': "https:/www.coolapk.com" + result[0][3],
         'name': result[0][4],
         'version': result[0][5],
         'downloadcount': result[0][6],
