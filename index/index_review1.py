@@ -8,10 +8,10 @@ stop = [line.strip() for line in open('../stopwords/stopwords.txt', 'r', encodin
 # insert_w = []
 
 
-def create_index_review(review):
-    skip_url = review[0]
-    coolapk_review = review[1]
-    seg_list = jieba.cut_for_search(coolapk_review, HMM=False)
+def create_index_name(name):
+    skip_url = name[0]
+    coolapk_name = name[1]
+    seg_list = jieba.cut_for_search(coolapk_name, HMM=False)
     seg_list_dic = []
     for seg in seg_list:
         if seg not in stop:
@@ -46,7 +46,7 @@ def insert_words(words):
         if word != '':
             try:
                 # 执行sql语句
-                cursor.execute("""INSERT INTO index_review(words) VALUES(%s)""", (word))
+                cursor.execute("""INSERT INTO index_name(words) VALUES(%s)""", (word))
                 # 提交到数据库执行
                 db.commit()
             except:
@@ -60,11 +60,11 @@ if __name__ == "__main__":
     db = pymysql.connect("localhost", "root", "8520", "coolapk")
     # 使用 cursor() 方法创建一个游标对象 cursor
     cursor = db.cursor()
-    sql = "drop table index_review"
+    sql = "drop table index_name"
     cursor.execute(sql)
 
     # try:
-    #     sql = """Create table index_review(
+    #     sql = """Create table index_name(
     #                     words_id int not null AUTO_INCREMENT,\
     #                     words varchar(20)  not null,\
     #                     skip_urls longtext ,\
@@ -73,24 +73,24 @@ if __name__ == "__main__":
     #                     )"""
     #     cursor.execute(sql)
     # except:
-    #     print("创建index_review表失败")
+    #     print("创建index_name表失败")
     #     db.rollback()
         # exit(0)
-    sql = """Create table index_review( 
+    sql = """Create table index_name( 
                             words varchar(20)  not null,\
                             skip_urls longtext ,\
                             primary key (words)
                             )"""
     cursor.execute(sql)
-    # 从download_apk中读取review
+    # 从download_apk中读取name
     try:
-        sql = """select skip_url,coolapk_review from download_apk"""
+        sql = """select skip_url,name from download_apk"""
         cursor.execute(sql)
         result = cursor.fetchall()
         db.commit()
 
     except:
-        print("读取数据skip_url,coolapk_review失败")
+        print("读取数据skip_url,coolapk_name失败")
         db.rollback()
         exit(0)
     # 分词
@@ -103,7 +103,7 @@ if __name__ == "__main__":
             str_temp = temp[0]
             item = (item[0], str_temp)
             # print(item[1])
-            words = create_index_review(item)
+            words = create_index_name(item)
             # print(words)
             insert_words(words)
             insert_words(words)
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         if y % 500 == 0:
             print("目前文章数：",y)
     print("第一次遍历分词结束")
-    # f = open(r'index_review.txt', 'a')
+    # f = open(r'index_name.txt', 'a')
     #
     # f.write('\n'.join(insert_w))
     #
